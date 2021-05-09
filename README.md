@@ -9,6 +9,11 @@ To run `trec_eval` conveniently on the latest search result, run test.sh with
 ./test.sh
 ```
 
+
+**Note**: As I retained the full analytics I used to write my report, please contact my email if you need those experiment results.
+
+
+
 To run the codes such as `main.py`, you must
 1. Download PyCharm (must use)
 2. Build a Docker container with `Dockerfile`.
