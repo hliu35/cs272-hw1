@@ -1,7 +1,7 @@
 # CS272 HW1
 
 05/09/2021
-[Anthony Liu](hliu35@ucsc.edu)
+[Anthony Liu](mailto:hliu35@ucsc.edu)
 
 To run `trec_eval` conveniently on the latest search result, run test.sh with
 
