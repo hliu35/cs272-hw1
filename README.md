@@ -18,7 +18,7 @@ To run the codes such as `main.py`, you must
 To run the main program that does the indexing and searching using Lucene
 1. Run `main.py` in PyCharm
 2. Select Similarity option when prompted
-3. Wait for result and the corresponding output file `qhits.ohsu.88-91`
+3. Wait for result and the corresponding output file `qhits.ohsu.88-91`. (Expect 1min for each stage)
 
 
 To examine how I attempted to bypass Lucene for additional flexibility (but failed):
