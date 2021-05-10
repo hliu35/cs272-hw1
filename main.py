@@ -22,7 +22,7 @@ from org.apache.lucene.search.similarities import SimilarityBase
 
 import query_builder as QB
 import custom_ranking as CR
-import query_preprocess as QP
+import text_preprocess as TP
 #import term_frequency as TFQ
 import my_similarity as MS
 
@@ -83,6 +83,7 @@ if __name__ == "__main__":
                 doc.add(Field(flag, docID, TextField.TYPE_STORED))
                 doc_count += 1
         else:
+            if flag in ["T", "W", "M"]: l = TP.stopword_removal(l)
             doc.add(Field(flag, l, TextField.TYPE_STORED))
 
     midtime = time.time()
@@ -96,7 +97,7 @@ if __name__ == "__main__":
     isearcher = IndexSearcher(ireader)
     isearcher.setSimilarity(similarity_of_choice) # IndexSearcher.setSimilarity(XXX)
 
-    qlist = QP.preprocess() # a list of query
+    qlist = TP.query_preprocess() # a list of query
     outfile = open("qhits.ohsu.88-91", "w")
 
     for q in qlist:
@@ -105,7 +106,7 @@ if __name__ == "__main__":
         description = q["desc"]
 
         # further process the query
-        #description = QP.stopword_removal(description)
+        description = TP.stopword_removal(description)
 
         # this is BooleanQuery not BooleanSimilarity (from org.apache.lucene.search.similarities.Similarity)
         searching_query = QB.bq_builder(title, description, analyzer)
