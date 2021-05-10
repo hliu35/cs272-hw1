@@ -21,7 +21,7 @@ from org.apache.lucene.search.similarities import BooleanSimilarity, ClassicSimi
 from org.apache.lucene.search.similarities import SimilarityBase
 
 import query_builder as QB
-import query_preprocess as QP
+import text_preprocess as TP
 import term_frequency as TFQ
 
 DISPLAY_COUNT = 50
@@ -66,7 +66,7 @@ if __name__ == "__main__":
             if flag == "U":
                 uid = int(l)
             elif flag == "W":
-                l = QP.stopword_removal(l) # test
+                l = TP.stopword_removal(l) # test
                 termSet, termMap = TFQ.generate_term_map(l)
                 Terms = Terms.union(termSet)
                 termMapAll[docID] = termMap
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     print("\nindexed %d in %.2f seconds\n" % (doc_count, midtime - begintime))
 
     # QUERY
-    qlist = QP.preprocess()  # a list of query
+    qlist = TP.query_preprocess()  # a list of query
     query_count = len(qlist)
     outfile = open("qhits.ohsu.88-91", "w")
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         description = q["desc"]
 
         # further process the query
-        description = QP.stopword_removal(description)
+        description = TP.stopword_removal(description)
         dl = description.split(" ")
         termSet, termMap = TFQ.generate_term_map(dl, process=False)
         Terms = Terms.union(termSet)
