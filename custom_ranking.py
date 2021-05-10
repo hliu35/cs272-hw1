@@ -3,6 +3,10 @@ import time
 import re
 
 import lucene
+import nltk
+from nltk.corpus import stopwords
+nltk.download("stopwords")
+SW = set(stopwords.words('english'))
 
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.lucene.store import FSDirectory, RAMDirectory
@@ -28,7 +32,6 @@ DISPLAY_COUNT = 50
 HEADLESS = True
 
 print_count = 0
-punctuations = '''!()-[]{};:'"\,<>.?@#$%^&*_~''' # no / in this
 
 
 if __name__ == "__main__":
@@ -90,7 +93,7 @@ if __name__ == "__main__":
         description = q["desc"]
 
         # further process the query
-        description = TP.stopword_removal(description)
+        description = TP.stopword_removal(description, SW)
         dl = description.split(" ")
         termSet, termMap = TFQ.generate_term_map(dl, process=False)
         Terms = Terms.union(termSet)

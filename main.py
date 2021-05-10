@@ -3,6 +3,10 @@ import time
 import re
 
 import lucene
+import nltk
+from nltk.corpus import stopwords
+nltk.download("stopwords")
+SW = set(stopwords.words('english'))
 
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.lucene.store import FSDirectory, RAMDirectory
@@ -23,14 +27,13 @@ from org.apache.lucene.search.similarities import SimilarityBase
 import query_builder as QB
 import custom_ranking as CR
 import text_preprocess as TP
-#import term_frequency as TFQ
 import my_similarity as MS
 
 DISPLAY_COUNT = 50
 HEADLESS = True
 
 print_count = 0
-punctuations = '''!()-[]{};:'"\,<>.?@#$%^&*_~''' # no / in this
+
 
 
 if __name__ == "__main__":
@@ -47,8 +50,8 @@ if __name__ == "__main__":
     analyzer = StandardAnalyzer()
 
     # set the similarity config
-    selection = input("Select Similarity\n1: Custom\n2: Boolean\n3: Classic\n4: BM25\nEnter selection: ")
-    s = int(selection)
+    selection = input("Select Similarity\n1: Custom\n2: Boolean\n3: Classic\n4: BM25\nEnter selection (default 1): ")
+    s = 1 if selection == "" else int(selection)
     similarity_of_choice = [MS.MysteriousSimilarity(), \
                             BooleanSimilarity(), \
                             ClassicSimilarity(), \
@@ -70,6 +73,7 @@ if __name__ == "__main__":
     doc_count = 0
 
     begintime = time.time()
+    print("Indexing documents...")
 
     # INDEXING
     for i, l, in enumerate(lines):
@@ -83,7 +87,8 @@ if __name__ == "__main__":
                 doc.add(Field(flag, docID, TextField.TYPE_STORED))
                 doc_count += 1
         else:
-            if flag in ["T", "W", "M"]: l = TP.stopword_removal(l)
+            l = l.lower()
+            if flag == "W": l = TP.stopword_removal(l, SW)
             doc.add(Field(flag, l, TextField.TYPE_STORED))
 
     midtime = time.time()
@@ -106,7 +111,7 @@ if __name__ == "__main__":
         description = q["desc"]
 
         # further process the query
-        description = TP.stopword_removal(description)
+        description = TP.stopword_removal(description, SW)
 
         # this is BooleanQuery not BooleanSimilarity (from org.apache.lucene.search.similarities.Similarity)
         searching_query = QB.bq_builder(title, description, analyzer)
